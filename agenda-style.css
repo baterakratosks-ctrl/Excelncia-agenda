@@ -306,6 +306,12 @@ nav {
     border-radius: 10px;
     padding: 20px;
     display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.colab-header {
+    display: flex;
     align-items: center;
     gap: 15px;
 }
@@ -328,6 +334,13 @@ nav {
 .colab-info p {
     color: rgba(255, 255, 255, 0.6);
     font-size: 0.85rem;
+}
+
+.colab-actions {
+    display: flex;
+    gap: 8px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .tipo-badge {

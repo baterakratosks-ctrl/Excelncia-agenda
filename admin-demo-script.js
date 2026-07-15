@@ -223,16 +223,20 @@ function renderizarColaboradores() {
         const deptBadge = dept ? `<span class="dept-badge" style="background:${dept.cor}">${dept.nome}</span>` : '';
 
         card.innerHTML = `
-            <div class="colab-color" style="background:${colab.cor}"></div>
-            <div class="colab-info">
-                <h4>${colab.nome}</h4>
-                <p>${colab.email}</p>
-                <p>${colab.cargo || 'Sem cargo'}</p>
-                <span class="tipo-badge" ${tipoBadge}>${tipoTexto}</span>
-                ${deptBadge}
+            <div class="colab-header">
+                <div class="colab-color" style="background:${colab.cor}"></div>
+                <div class="colab-info">
+                    <h4>${colab.nome}</h4>
+                    <p>${colab.email}</p>
+                    <p>${colab.cargo || 'Sem cargo'}</p>
+                    <span class="tipo-badge" ${tipoBadge}>${tipoTexto}</span>
+                    ${deptBadge}
+                </div>
             </div>
-            <button class="btn-edit" onclick="editarColaborador('${colab.id}')">Editar</button>
-            <button class="btn-delete" onclick="deletarColaborador('${colab.id}')">Excluir</button>
+            <div class="colab-actions">
+                <button class="btn-edit" onclick="editarColaborador('${colab.id}')">Editar</button>
+                <button class="btn-delete" onclick="deletarColaborador('${colab.id}')">Excluir</button>
+            </div>
         `;
         container.appendChild(card);
     });
