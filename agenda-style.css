@@ -339,6 +339,53 @@ nav {
     margin-top: 5px;
 }
 
+.dept-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    color: #fff;
+    margin-top: 3px;
+    margin-left: 5px;
+}
+
+/* Departamentos */
+.dept-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 15px;
+}
+
+.dept-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.dept-color {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.dept-info {
+    flex: 1;
+}
+
+.dept-info h4 {
+    margin-bottom: 3px;
+}
+
+.dept-info p {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.85rem;
+}
+
 .btn-delete {
     padding: 6px 12px;
     border: 1px solid #ff5252;

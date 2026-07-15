@@ -3,6 +3,7 @@ let mesAtual = new Date().getMonth() + 1;
 let anoAtual = new Date().getFullYear();
 let colaboradores = JSON.parse(localStorage.getItem('colaboradores') || '[]');
 let escalas = JSON.parse(localStorage.getItem('escalas') || '[]');
+let departamentos = JSON.parse(localStorage.getItem('departamentos') || '[]');
 
 // Verificar autenticação
 const user = JSON.parse(localStorage.getItem('usuarioLogado') || 'null');
@@ -13,6 +14,7 @@ if (!user || user.tipo !== 'admin') {
 // Inicialização
 document.addEventListener('DOMContentLoaded', () => {
     renderizarColaboradores();
+    renderizarDepartamentos();
     carregarEscalas();
     renderizarCalendario();
     setupEventListeners();
@@ -57,11 +59,17 @@ function setupEventListeners() {
     });
 
     document.getElementById('btnNovoColab').addEventListener('click', () => {
+        carregarDepartamentosNoSelect();
         document.getElementById('modalColab').classList.remove('hidden');
+    });
+
+    document.getElementById('btnNovoDepartamento').addEventListener('click', () => {
+        document.getElementById('modalDepartamento').classList.remove('hidden');
     });
 
     document.getElementById('formColab').addEventListener('submit', salvarColaborador);
     document.getElementById('formEscala').addEventListener('submit', salvarEscala);
+    document.getElementById('formDepartamento').addEventListener('submit', salvarDepartamento);
 }
 
 // Calendário
@@ -208,6 +216,11 @@ function renderizarColaboradores() {
         card.className = 'colab-card';
         const tipoTexto = colab.tipo === 'admin' ? 'Administrador' : 'Usuário';
         const tipoBadge = colab.tipo === 'admin' ? 'style="background:#ff5252"' : 'style="background:#4caf50"';
+
+        // Buscar departamento
+        const dept = departamentos.find(d => d.id === colab.departamento);
+        const deptBadge = dept ? `<span class="dept-badge" style="background:${dept.cor}">${dept.nome}</span>` : '';
+
         card.innerHTML = `
             <div class="colab-color" style="background:${colab.cor}"></div>
             <div class="colab-info">
@@ -215,6 +228,7 @@ function renderizarColaboradores() {
                 <p>${colab.email}</p>
                 <p>${colab.cargo || 'Sem cargo'}</p>
                 <span class="tipo-badge" ${tipoBadge}>${tipoTexto}</span>
+                ${deptBadge}
             </div>
             <button class="btn-delete" onclick="deletarColaborador('${colab.id}')">Excluir</button>
         `;
@@ -244,6 +258,7 @@ function salvarColaborador(e) {
     const cargo = document.getElementById('colabCargo').value;
     const cor = document.getElementById('colabCor').value;
     const tipo = document.getElementById('colabTipo').value;
+    const departamento = document.getElementById('colabDepartamento').value;
 
     const novoColaborador = {
         id: Date.now().toString(),
@@ -251,7 +266,8 @@ function salvarColaborador(e) {
         email,
         cargo,
         cor,
-        tipo
+        tipo,
+        departamento
     };
 
     colaboradores.push(novoColaborador);
@@ -324,4 +340,85 @@ function deletarEscala(id) {
     localStorage.setItem('escalas', JSON.stringify(escalas));
     fecharDetalhes();
     carregarEscalas();
+}
+
+// Departamentos
+function renderizarDepartamentos() {
+    const container = document.getElementById('listaDepartamentos');
+    container.innerHTML = '';
+
+    if (departamentos.length === 0) {
+        container.innerHTML = '<p style="color:rgba(255,255,255,0.5);">Nenhum departamento cadastrado. Clique em "+ Novo Departamento" para começar.</p>';
+        return;
+    }
+
+    departamentos.forEach(dept => {
+        const card = document.createElement('div');
+        card.className = 'dept-card';
+        const qtdColaboradores = colaboradores.filter(c => c.departamento === dept.id).length;
+        card.innerHTML = `
+            <div class="dept-color" style="background:${dept.cor}"></div>
+            <div class="dept-info">
+                <h4>${dept.nome}</h4>
+                <p>${dept.descricao || 'Sem descrição'}</p>
+                <p style="font-size:0.75rem;opacity:0.7;">${qtdColaboradores} colaborador(es)</p>
+            </div>
+            <button class="btn-delete" onclick="deletarDepartamento('${dept.id}')">Excluir</button>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function salvarDepartamento(e) {
+    e.preventDefault();
+    const nome = document.getElementById('deptNome').value;
+    const descricao = document.getElementById('deptDescricao').value;
+    const cor = document.getElementById('deptCor').value;
+
+    const novoDepartamento = {
+        id: Date.now().toString(),
+        nome,
+        descricao,
+        cor
+    };
+
+    departamentos.push(novoDepartamento);
+    localStorage.setItem('departamentos', JSON.stringify(departamentos));
+
+    fecharModalDepartamento();
+    renderizarDepartamentos();
+    alert('Departamento cadastrado com sucesso!');
+}
+
+function deletarDepartamento(id) {
+    if (!confirm('Excluir este departamento? Os colaboradores associados ficarão sem departamento.')) return;
+    departamentos = departamentos.filter(d => d.id !== id);
+    localStorage.setItem('departamentos', JSON.stringify(departamentos));
+
+    // Remover associação dos colaboradores
+    colaboradores.forEach(c => {
+        if (c.departamento === id) {
+            c.departamento = '';
+        }
+    });
+    localStorage.setItem('colaboradores', JSON.stringify(colaboradores));
+
+    renderizarDepartamentos();
+    renderizarColaboradores();
+}
+
+function fecharModalDepartamento() {
+    document.getElementById('modalDepartamento').classList.add('hidden');
+    document.getElementById('formDepartamento').reset();
+}
+
+function carregarDepartamentosNoSelect() {
+    const select = document.getElementById('colabDepartamento');
+    select.innerHTML = '<option value="">Selecione um departamento</option>';
+    departamentos.forEach(dept => {
+        const opt = document.createElement('option');
+        opt.value = dept.id;
+        opt.textContent = dept.nome;
+        select.appendChild(opt);
+    });
 }

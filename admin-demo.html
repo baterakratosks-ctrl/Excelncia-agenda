@@ -16,6 +16,7 @@
             </div>
             <nav>
                 <button class="nav-btn active" data-tab="colaboradores">Colaboradores</button>
+                <button class="nav-btn" data-tab="departamentos">Departamentos</button>
                 <button class="nav-btn" data-tab="escalas">Escalas</button>
                 <button class="nav-btn" onclick="fazerLogout()">Sair</button>
             </nav>
@@ -57,8 +58,48 @@
                                 <option value="admin">Administrador</option>
                             </select>
                         </div>
+                        <div class="form-group">
+                            <label>Departamento</label>
+                            <select id="colabDepartamento">
+                                <option value="">Selecione um departamento</option>
+                            </select>
+                        </div>
                         <div class="modal-actions">
                             <button type="button" class="btn-cancel" onclick="fecharModalColab()">Cancelar</button>
+                            <button type="submit" class="btn-save">Salvar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- DEPARTAMENTOS -->
+        <section id="tab-departamentos" class="tab-content">
+            <div class="section-header">
+                <h2>Gerenciar Departamentos</h2>
+                <button id="btnNovoDepartamento" class="btn-primary">+ Novo Departamento</button>
+            </div>
+            <div id="listaDepartamentos" class="dept-list"></div>
+
+            <!-- Modal departamento -->
+            <div id="modalDepartamento" class="modal hidden">
+                <div class="modal-content">
+                    <h3>Novo Departamento</h3>
+                    <form id="formDepartamento">
+                        <div class="form-group">
+                            <label>Nome do Departamento</label>
+                            <input type="text" id="deptNome" required placeholder="Ex: Administrativo, Operações...">
+                        </div>
+                        <div class="form-group">
+                            <label>Descrição</label>
+                            <textarea id="deptDescricao" rows="3" placeholder="Descrição do departamento..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Cor</label>
+                            <input type="color" id="deptCor" value="#7c4dff">
+                        </div>
+                        <div class="modal-actions">
+                            <button type="button" class="btn-cancel" onclick="fecharModalDepartamento()">Cancelar</button>
                             <button type="submit" class="btn-save">Salvar</button>
                         </div>
                     </form>
