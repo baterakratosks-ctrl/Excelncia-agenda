@@ -72,6 +72,7 @@ function setupEventListeners() {
     });
 
     document.getElementById('btnNovaFuncao').addEventListener('click', () => {
+        carregarDepartamentosNoSelectFuncao();
         document.getElementById('modalFuncao').classList.remove('hidden');
     });
 
@@ -498,9 +499,14 @@ function renderizarFuncoes() {
         const card = document.createElement('div');
         card.className = 'funcao-card';
         const qtdColaboradores = colaboradores.filter(c => c.funcao === funcao.id).length;
+        const dept = departamentos.find(d => d.id === funcao.departamento);
+        const deptNome = dept ? dept.nome : 'Sem departamento';
+        const deptCor = dept ? dept.cor : '#666';
+
         card.innerHTML = `
             <div class="funcao-info">
                 <h4>${funcao.nome}</h4>
+                <p><span style="display:inline-block;padding:2px 8px;background:${deptCor};border-radius:12px;font-size:0.75rem;color:#fff;">${deptNome}</span></p>
                 <p>${funcao.descricao || 'Sem descrição'}</p>
                 <p style="font-size:0.75rem;opacity:0.7;">${qtdColaboradores} colaborador(es)</p>
             </div>
@@ -512,11 +518,13 @@ function renderizarFuncoes() {
 
 function salvarFuncao(e) {
     e.preventDefault();
+    const departamento = document.getElementById('funcaoDepartamento').value;
     const nome = document.getElementById('funcaoNome').value;
     const descricao = document.getElementById('funcaoDescricao').value;
 
     const novaFuncao = {
         id: Date.now().toString(),
+        departamento,
         nome,
         descricao
     };
@@ -551,13 +559,37 @@ function fecharModalFuncao() {
     document.getElementById('formFuncao').reset();
 }
 
-function carregarFuncoesNoSelect() {
+function carregarFuncoesNoSelect(departamentoId = null) {
     const select = document.getElementById('colabFuncao');
     select.innerHTML = '<option value="">Selecione uma função</option>';
-    funcoes.forEach(funcao => {
+
+    let funcoesFiltradas = funcoes;
+    if (departamentoId) {
+        funcoesFiltradas = funcoes.filter(f => f.departamento === departamentoId);
+    }
+
+    funcoesFiltradas.forEach(funcao => {
+        const dept = departamentos.find(d => d.id === funcao.departamento);
+        const deptNome = dept ? dept.nome : '';
         const opt = document.createElement('option');
         opt.value = funcao.id;
-        opt.textContent = funcao.nome;
+        opt.textContent = `${funcao.nome} (${deptNome})`;
         select.appendChild(opt);
     });
+}
+
+function carregarDepartamentosNoSelectFuncao() {
+    const select = document.getElementById('funcaoDepartamento');
+    select.innerHTML = '<option value="">Selecione um departamento</option>';
+    departamentos.forEach(dept => {
+        const opt = document.createElement('option');
+        opt.value = dept.id;
+        opt.textContent = dept.nome;
+        select.appendChild(opt);
+    });
+}
+
+function filtrarFuncoesPorDepartamento() {
+    const departamentoId = document.getElementById('colabDepartamento').value;
+    carregarFuncoesNoSelect(departamentoId);
 }
