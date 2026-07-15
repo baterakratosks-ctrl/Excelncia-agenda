@@ -206,12 +206,15 @@ function renderizarColaboradores() {
     colaboradores.forEach(colab => {
         const card = document.createElement('div');
         card.className = 'colab-card';
+        const tipoTexto = colab.tipo === 'admin' ? 'Administrador' : 'Usuário';
+        const tipoBadge = colab.tipo === 'admin' ? 'style="background:#ff5252"' : 'style="background:#4caf50"';
         card.innerHTML = `
             <div class="colab-color" style="background:${colab.cor}"></div>
             <div class="colab-info">
                 <h4>${colab.nome}</h4>
                 <p>${colab.email}</p>
                 <p>${colab.cargo || 'Sem cargo'}</p>
+                <span class="tipo-badge" ${tipoBadge}>${tipoTexto}</span>
             </div>
             <button class="btn-delete" onclick="deletarColaborador('${colab.id}')">Excluir</button>
         `;
@@ -240,13 +243,15 @@ function salvarColaborador(e) {
     const email = document.getElementById('colabEmail').value;
     const cargo = document.getElementById('colabCargo').value;
     const cor = document.getElementById('colabCor').value;
+    const tipo = document.getElementById('colabTipo').value;
 
     const novoColaborador = {
         id: Date.now().toString(),
         nome,
         email,
         cargo,
-        cor
+        cor,
+        tipo
     };
 
     colaboradores.push(novoColaborador);
