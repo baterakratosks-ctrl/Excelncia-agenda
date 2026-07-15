@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excelência - Login</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .google-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: #fff;
+            color: #333;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.3s;
+            margin-top: 10px;
+            text-decoration: none;
+        }
+        .google-btn:hover {
+            opacity: 0.9;
+        }
+        .google-btn img {
+            width: 20px;
+            height: 20px;
+        }
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            color: rgba(255,255,255,0.5);
+            font-size: 0.9rem;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255,255,255,0.2);
+        }
+        .divider::before { margin-right: 10px; }
+        .divider::after { margin-left: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-box">
+            <div class="logo">
+                <h1>🐙 Excelência</h1>
+                <p style="color:rgba(255,255,255,0.6);margin-top:10px;">Sistema de Agenda e Escalas</p>
+            </div>
+
+            <div class="form active">
+                <h2>Bem-vindo!</h2>
+                <p style="color:rgba(255,255,255,0.7);margin-bottom:20px;">
+                    Faça login com sua conta Google para acessar o sistema
+                </p>
+
+                <a href="google-auth.php" class="google-btn">
+                    <img src="https://www.google.com/favicon.ico" alt="Google">
+                    Continuar com Google
+                </a>
+
+                <div class="divider">ou</div>
+
+                <form id="adminForm" action="admin-login.php" method="POST">
+                    <div class="input-group">
+                        <label for="adminEmail">Login Administrador</label>
+                        <input type="email" id="adminEmail" name="email" placeholder="admin@octopus.com" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="adminPassword">Senha</label>
+                        <input type="password" id="adminPassword" name="senha" placeholder="Senha do admin" required>
+                    </div>
+                    <button type="submit" class="btn">Entrar como Admin</button>
+                </form>
+
+                <p style="color:rgba(255,255,255,0.5);font-size:0.85rem;margin-top:20px;text-align:center;">
+                    Admin padrão: admin@octopus.com / admin123
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

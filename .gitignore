@@ -1,0 +1,7 @@
+config.local.php
+cache.json
+agenda.db
+usuarios.db
+*.log
+
+.vercel

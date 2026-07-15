@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excelência - Painel Admin</title>
+    <link rel="stylesheet" href="agenda-style.css">
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="firebase-login.js"></script>
+    <script src="firebase-db.js"></script>
+    <script src="google-calendar.js"></script>
+</head>
+<body>
+    <div class="app">
+        <header>
+            <div class="header-left">
+                <h1>🐙 Excelência</h1>
+                <span class="subtitle">Painel Administrativo</span>
+            </div>
+            <nav>
+                <button class="nav-btn active" data-tab="colaboradores">Colaboradores</button>
+                <button class="nav-btn" data-tab="escalas">Escalas</button>
+                <button class="nav-btn" onclick="authManager.logout()">Sair</button>
+            </nav>
+        </header>
+
+        <!-- COLABORADORES -->
+        <section id="tab-colaboradores" class="tab-content active">
+            <div class="section-header">
+                <h2>Gerenciar Colaboradores</h2>
+                <button id="btnNovoColab" class="btn-primary">+ Novo Colaborador</button>
+            </div>
+            <div id="listaColaboradores" class="colab-list"></div>
+
+            <!-- Modal colaborador -->
+            <div id="modalColab" class="modal hidden">
+                <div class="modal-content">
+                    <h3>Novo Colaborador</h3>
+                    <form id="formColab">
+                        <div class="form-group">
+                            <label>Nome Completo</label>
+                            <input type="text" id="colabNome" required>
+                        </div>
+                        <div class="form-group">
+                            <label>E-mail</label>
+                            <input type="email" id="colabEmail" required placeholder="colaborador@empresa.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Senha Inicial</label>
+                            <input type="password" id="colabSenha" required minlength="6" placeholder="Mínimo 6 caracteres">
+                        </div>
+                        <div class="form-group">
+                            <label>Cargo</label>
+                            <input type="text" id="colabCargo" placeholder="Ex: Operador, Gerente...">
+                        </div>
+                        <div class="form-group">
+                            <label>Cor (identificação visual)</label>
+                            <input type="color" id="colabCor" value="#7c4dff">
+                        </div>
+                        <div class="modal-actions">
+                            <button type="button" class="btn-cancel" onclick="fecharModalColab()">Cancelar</button>
+                            <button type="submit" class="btn-save">Salvar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- ESCALAS -->
+        <section id="tab-escalas" class="tab-content">
+            <div class="calendar-header">
+                <button id="prevMes" class="btn-icon">◀</button>
+                <h2 id="mesAno"></h2>
+                <button id="nextMes" class="btn-icon">▶</button>
+                <button id="hojeBtn" class="btn-sm">Hoje</button>
+            </div>
+            <div class="calendar-grid">
+                <div class="day-name">Dom</div>
+                <div class="day-name">Seg</div>
+                <div class="day-name">Ter</div>
+                <div class="day-name">Qua</div>
+                <div class="day-name">Qui</div>
+                <div class="day-name">Sex</div>
+                <div class="day-name">Sáb</div>
+                <div id="calendarDays" class="calendar-days"></div>
+            </div>
+
+            <!-- Modal de escala -->
+            <div id="modalEscala" class="modal hidden">
+                <div class="modal-content">
+                    <h3>Nova Escala - <span id="modalData"></span></h3>
+                    <form id="formEscala">
+                        <input type="hidden" id="escalaData">
+                        <div class="form-group">
+                            <label>Colaborador</label>
+                            <select id="escalaColaborador" required></select>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Hora Início</label>
+                                <input type="time" id="escalaInicio">
+                            </div>
+                            <div class="form-group">
+                                <label>Hora Fim</label>
+                                <input type="time" id="escalaFim">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Função</label>
+                            <input type="text" id="escalaFuncao" placeholder="Ex: Atendimento, Supervisão...">
+                        </div>
+                        <div class="form-group">
+                            <label>Observação</label>
+                            <textarea id="escalaObs" rows="2"></textarea>
+                        </div>
+                        <div class="modal-actions">
+                            <button type="button" class="btn-cancel" onclick="fecharModal()">Cancelar</button>
+                            <button type="submit" class="btn-save">Salvar e Sincronizar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Modal de detalhes -->
+            <div id="modalDetalhes" class="modal hidden">
+                <div class="modal-content">
+                    <h3>Escalas do dia <span id="detalhesData"></span></h3>
+                    <div id="detalhesLista"></div>
+                    <button type="button" class="btn-cancel" onclick="fecharDetalhes()">Fechar</button>
+                </div>
+            </div>
+        </section>
+    </div>
+    <script src="admin-firebase-script.js"></script>
+</body>
+</html>

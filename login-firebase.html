@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excelência - Login</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="firebase-login.js"></script>
+    <style>
+        .google-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: #fff;
+            color: #333;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.3s;
+            margin-top: 10px;
+        }
+        .google-btn:hover { opacity: 0.9; }
+        .google-btn img { width: 20px; height: 20px; }
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            color: rgba(255,255,255,0.5);
+            font-size: 0.9rem;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255,255,255,0.2);
+        }
+        .divider::before { margin-right: 10px; }
+        .divider::after { margin-left: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-box">
+            <div class="logo">
+                <h1>🐙 Excelência</h1>
+                <p style="color:rgba(255,255,255,0.6);margin-top:10px;">Sistema de Agenda e Escalas</p>
+            </div>
+
+            <div class="form active">
+                <h2>Bem-vindo!</h2>
+                <p style="color:rgba(255,255,255,0.7);margin-bottom:20px;">
+                    Faça login com sua conta Google para acessar o sistema
+                </p>
+
+                <button onclick="loginGoogle()" class="google-btn">
+                    <img src="https://www.google.com/favicon.ico" alt="Google">
+                    Continuar com Google
+                </button>
+
+                <div class="divider">ou</div>
+
+                <form id="adminForm" onsubmit="loginAdmin(event)">
+                    <div class="input-group">
+                        <label for="adminEmail">Login Administrador</label>
+                        <input type="email" id="adminEmail" placeholder="admin@excelencia.com" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="adminPassword">Senha</label>
+                        <input type="password" id="adminPassword" placeholder="Senha do admin" required>
+                    </div>
+                    <button type="submit" class="btn">Entrar como Admin</button>
+                </form>
+
+                <div id="loginMsg" class="msg"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function loginGoogle() {
+            try {
+                await authManager.loginWithGoogle();
+            } catch (error) {
+                document.getElementById('loginMsg').textContent = 'Erro: ' + error.message;
+                document.getElementById('loginMsg').className = 'msg error';
+            }
+        }
+
+        async function loginAdmin(e) {
+            e.preventDefault();
+            const email = document.getElementById('adminEmail').value;
+            const password = document.getElementById('adminPassword').value;
+            const msg = document.getElementById('loginMsg');
+
+            try {
+                await authManager.loginAdmin(email, password);
+            } catch (error) {
+                msg.textContent = 'Erro: ' + error.message;
+                msg.className = 'msg error';
+            }
+        }
+    </script>
+</body>
+</html>

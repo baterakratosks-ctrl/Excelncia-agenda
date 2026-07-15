@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excelência - Minha Agenda</title>
+    <link rel="stylesheet" href="agenda-style.css">
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="firebase-login.js"></script>
+    <script src="firebase-db.js"></script>
+</head>
+<body>
+    <div class="app">
+        <header>
+            <div class="header-left">
+                <h1>🐙 Excelência</h1>
+                <span class="subtitle">Minha Agenda</span>
+            </div>
+            <nav>
+                <button class="nav-btn" onclick="authManager.logout()">Sair</button>
+            </nav>
+        </header>
+
+        <section>
+            <div class="calendar-header">
+                <button id="prevMes" class="btn-icon">◀</button>
+                <h2 id="mesAno"></h2>
+                <button id="nextMes" class="btn-icon">▶</button>
+                <button id="hojeBtn" class="btn-sm">Hoje</button>
+            </div>
+            <div class="calendar-grid">
+                <div class="day-name">Dom</div>
+                <div class="day-name">Seg</div>
+                <div class="day-name">Ter</div>
+                <div class="day-name">Qua</div>
+                <div class="day-name">Qui</div>
+                <div class="day-name">Sex</div>
+                <div class="day-name">Sáb</div>
+                <div id="calendarDays" class="calendar-days"></div>
+            </div>
+
+            <!-- Modal de detalhes -->
+            <div id="modalDetalhes" class="modal hidden">
+                <div class="modal-content">
+                    <h3>Minhas Escalas - <span id="detalhesData"></span></h3>
+                    <div id="detalhesLista"></div>
+                    <button type="button" class="btn-cancel" onclick="fecharDetalhes()">Fechar</button>
+                </div>
+            </div>
+        </section>
+    </div>
+    <script src="agenda-firebase-script.js"></script>
+</body>
+</html>
