@@ -4,6 +4,7 @@ let anoAtual = new Date().getFullYear();
 let colaboradores = JSON.parse(localStorage.getItem('colaboradores') || '[]');
 let escalas = JSON.parse(localStorage.getItem('escalas') || '[]');
 let departamentos = JSON.parse(localStorage.getItem('departamentos') || '[]');
+let colaboradorEditandoId = null;
 
 // Verificar autenticação
 const user = JSON.parse(localStorage.getItem('usuarioLogado') || 'null');
@@ -230,6 +231,7 @@ function renderizarColaboradores() {
                 <span class="tipo-badge" ${tipoBadge}>${tipoTexto}</span>
                 ${deptBadge}
             </div>
+            <button class="btn-edit" onclick="editarColaborador('${colab.id}')">Editar</button>
             <button class="btn-delete" onclick="deletarColaborador('${colab.id}')">Excluir</button>
         `;
         container.appendChild(card);
@@ -260,22 +262,66 @@ function salvarColaborador(e) {
     const tipo = document.getElementById('colabTipo').value;
     const departamento = document.getElementById('colabDepartamento').value;
 
-    const novoColaborador = {
-        id: Date.now().toString(),
-        nome,
-        email,
-        cargo,
-        cor,
-        tipo,
-        departamento
-    };
+    if (colaboradorEditandoId) {
+        // Atualizar colaborador existente
+        const index = colaboradores.findIndex(c => c.id === colaboradorEditandoId);
+        if (index !== -1) {
+            colaboradores[index] = {
+                ...colaboradores[index],
+                nome,
+                email,
+                cargo,
+                cor,
+                tipo,
+                departamento
+            };
+        }
+        colaboradorEditandoId = null;
+        localStorage.setItem('colaboradores', JSON.stringify(colaboradores));
+        fecharModalColab();
+        renderizarColaboradores();
+        alert('Colaborador atualizado com sucesso!');
+    } else {
+        // Criar novo colaborador
+        const novoColaborador = {
+            id: Date.now().toString(),
+            nome,
+            email,
+            cargo,
+            cor,
+            tipo,
+            departamento
+        };
 
-    colaboradores.push(novoColaborador);
-    localStorage.setItem('colaboradores', JSON.stringify(colaboradores));
+        colaboradores.push(novoColaborador);
+        localStorage.setItem('colaboradores', JSON.stringify(colaboradores));
 
-    fecharModalColab();
-    renderizarColaboradores();
-    alert('Colaborador cadastrado com sucesso!');
+        fecharModalColab();
+        renderizarColaboradores();
+        alert('Colaborador cadastrado com sucesso!');
+    }
+}
+
+function editarColaborador(id) {
+    const colab = colaboradores.find(c => c.id === id);
+    if (!colab) return;
+
+    colaboradorEditandoId = id;
+    carregarDepartamentosNoSelect();
+
+    // Preencher formulário com dados do colaborador
+    document.getElementById('colabNome').value = colab.nome;
+    document.getElementById('colabEmail').value = colab.email;
+    document.getElementById('colabCargo').value = colab.cargo || '';
+    document.getElementById('colabCor').value = colab.cor;
+    document.getElementById('colabTipo').value = colab.tipo;
+    document.getElementById('colabDepartamento').value = colab.departamento || '';
+
+    // Mudar título do modal
+    document.querySelector('#modalColab h3').textContent = 'Editar Colaborador';
+
+    // Abrir modal
+    document.getElementById('modalColab').classList.remove('hidden');
 }
 
 function deletarColaborador(id) {
@@ -288,6 +334,8 @@ function deletarColaborador(id) {
 function fecharModalColab() {
     document.getElementById('modalColab').classList.add('hidden');
     document.getElementById('formColab').reset();
+    document.querySelector('#modalColab h3').textContent = 'Novo Colaborador';
+    colaboradorEditandoId = null;
 }
 
 // Escalas

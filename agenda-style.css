@@ -386,6 +386,22 @@ nav {
     font-size: 0.85rem;
 }
 
+.btn-edit {
+    padding: 6px 12px;
+    border: 1px solid #2196f3;
+    background: transparent;
+    color: #2196f3;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    margin-right: 5px;
+}
+
+.btn-edit:hover {
+    background: #2196f3;
+    color: #fff;
+}
+
 .btn-delete {
     padding: 6px 12px;
     border: 1px solid #ff5252;
