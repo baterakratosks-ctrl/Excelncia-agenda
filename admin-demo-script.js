@@ -5,8 +5,8 @@ let colaboradores = JSON.parse(localStorage.getItem('colaboradores') || '[]');
 let escalas = JSON.parse(localStorage.getItem('escalas') || '[]');
 
 // Verificar autenticação
-const user = JSON.parse(localStorage.getItem('user') || 'null');
-if (!user || !user.isAdmin) {
+const user = JSON.parse(localStorage.getItem('usuarioLogado') || 'null');
+if (!user || user.tipo !== 'admin') {
     window.location.href = 'index.html';
 }
 
@@ -18,8 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
 });
 
-function logout() {
-    localStorage.removeItem('user');
+function fazerLogout() {
+    localStorage.removeItem('usuarioLogado');
     window.location.href = 'index.html';
 }
 
