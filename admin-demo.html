@@ -16,6 +16,7 @@
             </div>
             <nav>
                 <button class="nav-btn active" data-tab="colaboradores">Colaboradores</button>
+                <button class="nav-btn" data-tab="funcoes">Funções</button>
                 <button class="nav-btn" data-tab="departamentos">Departamentos</button>
                 <button class="nav-btn" data-tab="escalas">Escalas</button>
                 <button class="nav-btn" onclick="fazerLogout()">Sair</button>
@@ -48,8 +49,10 @@
                             <input type="text" id="colabCargo" placeholder="Ex: Operador, Gerente...">
                         </div>
                         <div class="form-group">
-                            <label>Cor (identificação visual)</label>
-                            <input type="color" id="colabCor" value="#7c4dff">
+                            <label>Função</label>
+                            <select id="colabFuncao" required>
+                                <option value="">Selecione uma função</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label>Tipo de Usuário</label>
@@ -66,6 +69,36 @@
                         </div>
                         <div class="modal-actions">
                             <button type="button" class="btn-cancel" onclick="fecharModalColab()">Cancelar</button>
+                            <button type="submit" class="btn-save">Salvar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- FUNÇÕES -->
+        <section id="tab-funcoes" class="tab-content">
+            <div class="section-header">
+                <h2>Gerenciar Funções</h2>
+                <button id="btnNovaFuncao" class="btn-primary">+ Nova Função</button>
+            </div>
+            <div id="listaFuncoes" class="funcao-list"></div>
+
+            <!-- Modal função -->
+            <div id="modalFuncao" class="modal hidden">
+                <div class="modal-content">
+                    <h3>Nova Função</h3>
+                    <form id="formFuncao">
+                        <div class="form-group">
+                            <label>Nome da Função</label>
+                            <input type="text" id="funcaoNome" required placeholder="Ex: Operador de Caixa, Supervisor...">
+                        </div>
+                        <div class="form-group">
+                            <label>Descrição</label>
+                            <textarea id="funcaoDescricao" rows="3" placeholder="Descrição da função..."></textarea>
+                        </div>
+                        <div class="modal-actions">
+                            <button type="button" class="btn-cancel" onclick="fecharModalFuncao()">Cancelar</button>
                             <button type="submit" class="btn-save">Salvar</button>
                         </div>
                     </form>

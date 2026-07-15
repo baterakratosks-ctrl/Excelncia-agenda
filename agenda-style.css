@@ -399,6 +399,36 @@ nav {
     font-size: 0.85rem;
 }
 
+/* Funções */
+.funcao-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 15px;
+}
+
+.funcao-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.funcao-info {
+    flex: 1;
+}
+
+.funcao-info h4 {
+    margin-bottom: 3px;
+}
+
+.funcao-info p {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.85rem;
+}
+
 .btn-edit {
     padding: 6px 12px;
     border: 1px solid #2196f3;

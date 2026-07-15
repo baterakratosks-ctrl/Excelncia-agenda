@@ -4,6 +4,7 @@ let anoAtual = new Date().getFullYear();
 let colaboradores = JSON.parse(localStorage.getItem('colaboradores') || '[]');
 let escalas = JSON.parse(localStorage.getItem('escalas') || '[]');
 let departamentos = JSON.parse(localStorage.getItem('departamentos') || '[]');
+let funcoes = JSON.parse(localStorage.getItem('funcoes') || '[]');
 let colaboradorEditandoId = null;
 
 // Verificar autenticação
@@ -16,6 +17,7 @@ if (!user || user.tipo !== 'admin') {
 document.addEventListener('DOMContentLoaded', () => {
     renderizarColaboradores();
     renderizarDepartamentos();
+    renderizarFuncoes();
     carregarEscalas();
     renderizarCalendario();
     setupEventListeners();
@@ -61,6 +63,7 @@ function setupEventListeners() {
 
     document.getElementById('btnNovoColab').addEventListener('click', () => {
         carregarDepartamentosNoSelect();
+        carregarFuncoesNoSelect();
         document.getElementById('modalColab').classList.remove('hidden');
     });
 
@@ -68,9 +71,14 @@ function setupEventListeners() {
         document.getElementById('modalDepartamento').classList.remove('hidden');
     });
 
+    document.getElementById('btnNovaFuncao').addEventListener('click', () => {
+        document.getElementById('modalFuncao').classList.remove('hidden');
+    });
+
     document.getElementById('formColab').addEventListener('submit', salvarColaborador);
     document.getElementById('formEscala').addEventListener('submit', salvarEscala);
     document.getElementById('formDepartamento').addEventListener('submit', salvarDepartamento);
+    document.getElementById('formFuncao').addEventListener('submit', salvarFuncao);
 }
 
 // Calendário
@@ -262,7 +270,7 @@ function salvarColaborador(e) {
     const nome = document.getElementById('colabNome').value;
     const email = document.getElementById('colabEmail').value;
     const cargo = document.getElementById('colabCargo').value;
-    const cor = document.getElementById('colabCor').value;
+    const funcao = document.getElementById('colabFuncao').value;
     const tipo = document.getElementById('colabTipo').value;
     const departamento = document.getElementById('colabDepartamento').value;
 
@@ -275,7 +283,7 @@ function salvarColaborador(e) {
                 nome,
                 email,
                 cargo,
-                cor,
+                funcao,
                 tipo,
                 departamento
             };
@@ -292,7 +300,7 @@ function salvarColaborador(e) {
             nome,
             email,
             cargo,
-            cor,
+            funcao,
             tipo,
             departamento
         };
@@ -312,12 +320,13 @@ function editarColaborador(id) {
 
     colaboradorEditandoId = id;
     carregarDepartamentosNoSelect();
+    carregarFuncoesNoSelect();
 
     // Preencher formulário com dados do colaborador
     document.getElementById('colabNome').value = colab.nome;
     document.getElementById('colabEmail').value = colab.email;
     document.getElementById('colabCargo').value = colab.cargo || '';
-    document.getElementById('colabCor').value = colab.cor;
+    document.getElementById('colabFuncao').value = colab.funcao || '';
     document.getElementById('colabTipo').value = colab.tipo;
     document.getElementById('colabDepartamento').value = colab.departamento || '';
 
@@ -471,6 +480,84 @@ function carregarDepartamentosNoSelect() {
         const opt = document.createElement('option');
         opt.value = dept.id;
         opt.textContent = dept.nome;
+        select.appendChild(opt);
+    });
+}
+
+// Funções
+function renderizarFuncoes() {
+    const container = document.getElementById('listaFuncoes');
+    container.innerHTML = '';
+
+    if (funcoes.length === 0) {
+        container.innerHTML = '<p style="color:rgba(255,255,255,0.5);">Nenhuma função cadastrada. Clique em "+ Nova Função" para começar.</p>';
+        return;
+    }
+
+    funcoes.forEach(funcao => {
+        const card = document.createElement('div');
+        card.className = 'funcao-card';
+        const qtdColaboradores = colaboradores.filter(c => c.funcao === funcao.id).length;
+        card.innerHTML = `
+            <div class="funcao-info">
+                <h4>${funcao.nome}</h4>
+                <p>${funcao.descricao || 'Sem descrição'}</p>
+                <p style="font-size:0.75rem;opacity:0.7;">${qtdColaboradores} colaborador(es)</p>
+            </div>
+            <button class="btn-delete" onclick="deletarFuncao('${funcao.id}')">Excluir</button>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function salvarFuncao(e) {
+    e.preventDefault();
+    const nome = document.getElementById('funcaoNome').value;
+    const descricao = document.getElementById('funcaoDescricao').value;
+
+    const novaFuncao = {
+        id: Date.now().toString(),
+        nome,
+        descricao
+    };
+
+    funcoes.push(novaFuncao);
+    localStorage.setItem('funcoes', JSON.stringify(funcoes));
+
+    fecharModalFuncao();
+    renderizarFuncoes();
+    alert('Função cadastrada com sucesso!');
+}
+
+function deletarFuncao(id) {
+    if (!confirm('Excluir esta função?')) return;
+    funcoes = funcoes.filter(f => f.id !== id);
+    localStorage.setItem('funcoes', JSON.stringify(funcoes));
+
+    // Remover associação dos colaboradores
+    colaboradores.forEach(c => {
+        if (c.funcao === id) {
+            c.funcao = '';
+        }
+    });
+    localStorage.setItem('colaboradores', JSON.stringify(colaboradores));
+
+    renderizarFuncoes();
+    renderizarColaboradores();
+}
+
+function fecharModalFuncao() {
+    document.getElementById('modalFuncao').classList.add('hidden');
+    document.getElementById('formFuncao').reset();
+}
+
+function carregarFuncoesNoSelect() {
+    const select = document.getElementById('colabFuncao');
+    select.innerHTML = '<option value="">Selecione uma função</option>';
+    funcoes.forEach(funcao => {
+        const opt = document.createElement('option');
+        opt.value = funcao.id;
+        opt.textContent = funcao.nome;
         select.appendChild(opt);
     });
 }
